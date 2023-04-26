@@ -183,6 +183,8 @@ To start a basic cmake, you need:
         
         * The source needs to be included in the add_executable otherwise you get the following error:
             
+            * point proven using commit: ``65d7018784ecf61267b79857d42813e1a83f0590``
+            
             .. code-block:: console
 
                CMake Error at CMakeLists.txt:4 (add_executable):
