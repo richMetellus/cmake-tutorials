@@ -180,6 +180,15 @@ To start a basic cmake, you need:
             * Normal executables
             * Imported executable
             * Alias executable
+        
+        * The source needs to be included in the add_executable otherwise you get the following error:
+            
+            .. code-block:: console
+
+               CMake Error at CMakeLists.txt:4 (add_executable):
+               No SOURCES given to target: HelloWorldExecutable
+          
+
 
 ###############
 CMAKE LAB 1
