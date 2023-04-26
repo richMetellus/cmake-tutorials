@@ -3,10 +3,205 @@ CMake Tutorials Basic Concepts - Hello World | No Header File
 ####################################################################
 
 
+**************
+Road Map
+**************
 
-********************
-Pre-requisites
-********************
+Road map to understand CMake:
+
+1. Visit the `CMake`_ website and look at their 
+   `documentation reference <https://cmake.org/documentation/>`_ and go through
+   their training materials.
+
+      * Know what Cmake is and what CMake is not.
+      * Get familiar with CMake syntax, the different command/keywords
+
+2. Checkout the `Mastering CMake online book <https://cmake.org/cmake/help/book/mastering-cmake/>`_
+3. Do some tutorials. 
+4. repeat. keep referring back especially to bullet point 1 and/or 2.
+
+****************
+Lecture/Notes
+****************
+
+**CMake** 
+
+* is an open-source, general meta-build system and build management tool that 
+  allows developers to specify build configurations for a wide variety of 
+  platforms and build environments.
+
+    * CMake is designed to build, test, and package software.
+      
+      * using companion CMake tools: CPack, CTest and CDash
+
+* CMake is not a build system itself; it generates another system's build files.
+
+    * Originally designed as a generator for various dialect of ``Makefile``
+      CMake runs on most platforms, and can generate project files 
+      in many formats, including ninja (use ``-GNinja``).
+
+
+* CMake can be used to build project in many different programming languages now,
+  not just c++. This include Python, Java, Fortran, C# (added in 3.8), Swift 
+  and many more.
+    
+    * You can see the supported languages by going to the `CMake documentation
+      -> cmake-commands -> project section <https://cmake.org/cmake/help/latest/command/project.html>`_
+
+
+if you head over to the `CMake Basic Starting Point Document`_, there is some good
+resources.
+
+Main take-away:
+
+To start a basic cmake, you need:
+
+
+* A ``CMakeLists.txt`` file.
+
+    .. literalinclude:: ./CMakeLists.txt
+
+
+    * the naming of the file is important.
+    * CMake has its own scripting language and every cmake statement will go there.
+    * You can have different CMakeLists.txt in separate directory.
+    * you can include many cmake scripts.
+ 
+    * the CMakeLists.txt file is a central piece of the CMake build system 
+       that defines the build process, configuration options, and dependencies 
+       for a particular project. [1]_
+    
+    * Only one per directory, where CMake is supposed to look.
+
+* In the CMakeList.txt you need to include at minimum these lines:
+    
+    #. ``cmake_minimum_required(VERSION 3.0)``
+
+        * ``VERSION`` is case sensitive. Spelling Matter
+        * the ``cmake_minimum_required`` command should be used at the beginning 
+          of the CMakeLists.txt file, before any other commands or macros, 
+          to ensure that the correct version of CMake is used to build the project. [1]_
+
+        * cmake commands such as ``cmake_minimum_required`` can be upper case, lower case
+          or mixed.
+  
+        * This ``cmake_minimum_required`` is a **cmake scripting command** and not a 
+          cmake function
+          
+            .. note:: Do not confuse cmake command with cmake function.
+               
+               cmake function are user defined and start with the keyword 
+               ``function``
+            
+            * CMake commands can be grouped in 3 categories as:
+  
+              * **Scripting Commands**
+  
+                 * ``if``, ``else``, ``find_package``, ``cmake_minimum_required``
+  
+              * Project commands
+                  
+                  * ``add_library``, ``add_executable``, ``export``
+
+              * CTest Commands.
+                  
+                  * ``ctest_build``, ``ctest_test``
+  
+              Visit https://cmake.org/cmake/help/latest/manual/cmake-commands.7.html
+              to see more.
+  
+              * **I find it easier to think of cmake commands as cmake keywords used in cmake specific
+                syntax**
+                
+                 :strike:`even though CMake documentation refers them as command.`
+
+    #. ``project`` command/keyword 
+        
+        * is used to specify the project name and/or optionally the project version.
+        * How useful is that command?
+            
+            * This is useful to group related project-level variables such as 
+              PROJECT_VERSION, PROJECT_NAME
+              and configurations together. this can help with the ouput name of the binary,
+              setting package name.
+            
+            .. seealso:: 
+               
+               * :ref:`ChatGPT response on the use of cmake project command <chatGPTCMakeQueries>`
+               * `stackoverflow response <https://stackoverflow.com/questions/26878379/in-cmake-what-is-a-project>`_
+                   
+                   .. compound:: 
+                      
+                      A project logically groups a number of targets 
+                      (that is, libraries, executables and custom build steps) i
+                      nto a self-contained collection that can be built on its own.
+
+                       you may nest multiple projects. A top-level project may 
+                       include a subdirectory which is in turn another 
+                       self-contained project. 
+                       the project command introduces additional scoping for 
+                       certain values. For example, the ``PROJECT_BINARY_DIR``
+                       variable will always point to the root binary directory 
+                       of the current project. Compare this with ``CMAKE_BINARY_DIR``, 
+                       which always points to the binary directory of the 
+                       top-level project.
+
+                       .. admonition:: Advice
+                          
+                          Use sub-projects if your codebase is very complex 
+                          and you need users to be able to build certain 
+                          components in isolation.
+
+
+        * Synopsis
+            
+            .. code-block:: console
+               
+               project(<PROJECT-NAME> [<language-name>...])
+               project(<PROJECT-NAME>
+                       [VERSION <major>[.<minor>[.<patch>[.<tweak>]]]]
+                       [DESCRIPTION <project-description-string>]
+                       [HOMEPAGE_URL <url-string>]
+                       [LANGUAGES <language-name>...])
+
+         * Sets the name of the project, and stores it in the variable 
+           ``PROJECT_NAME``. 
+         * When called from the top-level CMakeLists.txt also stores 
+           the project name in the variable ``CMAKE_PROJECT_NAME``.
+         * more information available on `cmake doc <https://cmake.org/cmake/help/latest/command/project.html#command:project>`_
+           This gives you a very powerful mechanism for structuring the build system.
+
+    #. ``add_executable`` command/keyword 
+        
+        * Add an executable to the project using the specified source files.
+        * based on `the command documentation <https://cmake.org/cmake/help/latest/command/add_executable.html>`_
+          there are different type of executables.
+            
+            * Normal executables
+            * Imported executable
+            * Alias executable
+
+###############
+CMAKE LAB 1
+###############
+
+*******
+Scope
+*******
+
+Goals:
+
+* cmake basic syntax
+* cmake basic project
+
+* Explore the different ways of building a cmake-based project.
+
+    1. In-place build
+    2. Out-of-Source build
+
+**********************
+LAB: Pre-requisites
+**********************
 
 1. have a machine that already have cmake installed:
 
@@ -20,29 +215,15 @@ Pre-requisites
            cmake version 3.26.3
            
            CMake suite maintained and supported by Kitware (kitware.com/cmake).
+        
 
-*************
-Concepts
-*************
 
-CMake 
+*************************************
+LAB: Building - Journal Entry - Demo
+*************************************
 
-* is an open-source, general meta-build system and build management tool that 
-  allows developers to specify build configurations for a wide variety of 
-  platforms and build environments.
-
-    * Originally designed as a generator for various dialect of ``Makefile``
-      CMake runs on most platforms, and can generate project files 
-      in many formats, including ninja (use ``-GNinja``).
-
-           
-
-*******************************
-Building - Journal Entry
-*******************************
-
-Calling Cmake when there is no source File
-===============================================
+Configuration Phase - Generate Build file (Makefile)
+=========================================================
 
 * I started with a bare bone project like this:
    
@@ -71,7 +252,7 @@ Calling Cmake when there is no source File
          
          add_executable(HelloWorldExecutable main.cpp)
          
-Points Illustration:
+**Points Illustration:**
 
 1. To Illustrate the point that cmake expect a filename called ``CMakeLists.txt``,
    invoke ``cmake`` command from a directory that doesn't any cmake script file
@@ -291,7 +472,7 @@ Points Illustration:
              was created. That path of the target will be root,top project where we 
              invoke the ``cmake`` command. In that case ``cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders``
      
-              * this is referred to as in-tree build. 
+              * this is referred to as in-place build. 
      
               .. note::
                  It is not recommended to build where the source files are. This way
@@ -300,7 +481,10 @@ Points Illustration:
 
 Now the points are illustrated, I can create the main.cpp file.
 
-Steps:
+Out-of-Source Build
+-----------------------
+
+Out-of-Source Build Steps:
 
 #. create the main.cpp file
    
@@ -323,7 +507,7 @@ Steps:
       cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ mkdir -p build
       cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ cd build/
 
-#. Build with  cmake <path to CMakeLists.txt> , ``cmake ..``
+#. Build the configuration files with  ``cmake <path to CMakeLists.txt>`` , ``cmake ..``
     
     .. code-block:: console
        
@@ -388,7 +572,7 @@ Steps:
            │   │   └── TargetDirectories.txt
            │   ├── cmake_install.cmake
            │   └── Makefile
-           ├── CMakeLists.txt
+           ├── CMakeLists.txt    # -> top level 
            ├── main.cpp
            └── README.rst
            
@@ -399,7 +583,7 @@ Steps:
            Changes not staged for commit:
              (use "git add/rm <file>..." to update what will be committed)
              (use "git restore <file>..." to discard changes in working directory)
-                   deleted:    CMakeCache.txt
+                   deleted:    CMakeCache.txt #--> Deleted by me, manually
                    modified:   README.rst
            
            Untracked files:
@@ -409,4 +593,207 @@ Steps:
            
            no changes added to commit (use "git add" and/or "git commit -a")
            rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ 
-           
+
+#. Navigate to the ``build`` directory and run the build system ``make`` or whatever
+   was configured to build the program
+
+    * Since in the build directory, there is a ``Makefile`` created by cmake 
+      then GNU Make is the tool which controls the generation of executables.
+
+      .. code-block:: console
+
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ cd build/
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ make 
+         [ 50%] Building CXX object CMakeFiles/HelloWorldExecutable.dir/main.cpp.o
+         [100%] Linking CXX executable HelloWorldExecutable
+         [100%] Built target HelloWorldExecutable
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ 
+
+
+    * The build directory after this stage:
+
+      .. code-block:: console
+
+         cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ tree .
+         .
+         ├── CMakeCache.txt
+         ├── CMakeFiles
+         │   ├── 3.26.3
+         │   │   ├── CMakeCCompiler.cmake
+         │   │   ├── CMakeCXXCompiler.cmake
+         │   │   ├── CMakeDetermineCompilerABI_C.bin
+         │   │   ├── CMakeDetermineCompilerABI_CXX.bin
+         │   │   ├── CMakeSystem.cmake
+         │   │   ├── CompilerIdC
+         │   │   │   ├── a.out
+         │   │   │   ├── CMakeCCompilerId.c
+         │   │   │   └── tmp
+         │   │   └── CompilerIdCXX
+         │   │       ├── a.out
+         │   │       ├── CMakeCXXCompilerId.cpp
+         │   │       └── tmp
+         │   ├── cmake.check_cache
+         │   ├── CMakeConfigureLog.yaml
+         │   ├── CMakeDirectoryInformation.cmake
+         │   ├── CMakeScratch
+         │   ├── HelloWorldExecutable.dir
+         │   │   ├── build.make
+         │   │   ├── cmake_clean.cmake
+         │   │   ├── compiler_depend.make
+         │   │   ├── compiler_depend.ts
+         │   │   ├── DependInfo.cmake
+         │   │   ├── depend.make
+         │   │   ├── flags.make
+         │   │   ├── link.txt
+         │   │   ├── main.cpp.o
+         │   │   ├── main.cpp.o.d
+         │   │   └── progress.make
+         │   ├── Makefile2
+         │   ├── Makefile.cmake
+         │   ├── pkgRedirects
+         │   ├── progress.marks
+         │   └── TargetDirectories.txt
+         ├── cmake_install.cmake
+         ├── HelloWorldExecutable
+         └── Makefile         
+
+         9 directories, 31 file
+               
+#. Run the executable ``./HelloWorlExecutable``
+   
+    .. code-block:: console
+       rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ ./HelloWorldExecutable 
+       Hello World!rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$
+    
+    .. note::
+       
+       notice how the ``Hello World`` is missing an end of line character.
+
+#. Made some changes in the main.cpp and re-run make, no configuration phase needed.
+   
+    .. code-block:: console
+ 
+       rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ git diff ../main.cpp
+       diff --git a/01_Essentials/A_HelloWorld-Noheaders/main.cpp b/01_Essentials/A_HelloWorld-Noheaders/main.cpp
+       index 058f51a..4b37ad0 100644
+       --- a/01_Essentials/A_HelloWorld-Noheaders/main.cpp
+       +++ b/01_Essentials/A_HelloWorld-Noheaders/main.cpp
+       @@ -2,7 +2,7 @@
+        
+        int main()
+        {
+       -    std::cout<<"Hello World!";
+       +    std::cout<<"Hello World!" << std::endl;
+            
+            return 0;
+        }
+       rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ make
+       [ 50%] Building CXX object CMakeFiles/HelloWorldExecutable.dir/main.cpp.o
+       [100%] Linking CXX executable HelloWorldExecutable
+       [100%] Built target HelloWorldExecutable
+       rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ ./HelloWorldExecutable 
+       Hello World!
+       rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ 
+
+Running CMake Without Knowing The underlying Build Tool Used
+===============================================================
+
+.. important::
+
+   A very generic way you can run build without knowing what king of build system tool cmake use
+   in the background is through ``cmake --build`` command. 
+   ``cmake-build <directory-where CMakeCache.txt file is>``
+
+   .. note::
+      
+      The cmake configuration has to be done first. Otherwise you will get these
+      errors.
+
+      .. code-block::
+
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ rm -rf *
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cd ..
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ tree -a .
+         .
+         ├── build
+         ├── CMakeLists.txt
+         ├── .gitignore
+         ├── main.cpp
+         └── README.rst
+         
+         1 directory, 4 files
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ cd build/
+
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cmake --build ..
+         Error: could not load cache
+
+         rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cmake --build .
+         Error: could not load cache
+
+
+The illustration of calling the underlying build system cmake was configured for:
+
+1. create a build directory, delete anything in build directory if one already exist
+2. from the build directory, run ``cmake <path to where CMakeLists.txt>``
+3. Run ``cmake --build .``
+
+.. collapse:: show/hide steps with output
+
+   .. code-block:: console
+      
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ rm -rf *
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cd ..
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders(main)$ tree -a .
+      .
+      ├── build
+      ├── CMakeLists.txt
+      ├── .gitignore
+      ├── main.cpp
+      └── README.rst
+      
+      1 directory, 4 files
+      
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cmake ..
+      -- The C compiler identification is GNU 11.3.0
+      -- The CXX compiler identification is GNU 11.3.0
+      -- Detecting C compiler ABI info
+      -- Detecting C compiler ABI info - done
+      -- Check for working C compiler: /usr/bin/cc - skipped
+      -- Detecting C compile features
+      -- Detecting C compile features - done
+      -- Detecting CXX compiler ABI info
+      -- Detecting CXX compiler ABI info - done
+      -- Check for working CXX compiler: /usr/bin/c++ - skipped
+      -- Detecting CXX compile features
+      -- Detecting CXX compile features - done
+      -- Configuring done (1.2s)
+      -- Generating done (0.0s)
+      -- Build files have been written to: /home/rmetellus/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ cmake --build .
+      [ 50%] Building CXX object CMakeFiles/HelloWorldExecutable.dir/main.cpp.o
+      [100%] Linking CXX executable HelloWorldExecutable
+      [100%] Built target HelloWorldExecutable
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ ./HelloWorldExecutable 
+      Hello World!
+      rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ 
+
+
+
+
+
+***************************
+References/Inspirations
+***************************
+
+.. 
+   Links:
+
+.. _CMake: https://cmake.org/
+.. _kitware Meta-configuration of C/C++ Projects with CMake by Sandy McKenzie: https://www.kitware.com//meta-configuration-of-cc-projects-with-cmake/
+.. _CMake Basic Starting Point Document: https://cmake.org/cmake/help/latest/guide/tutorial/A%20Basic%20Starting%20Point.html#exercise-1-building-a-basic-project
+
+.. 
+   References
+
+.. [1] :ref:`chatGPT CMake Queries <chatGPTCMakeQueries>
+.. .. [2] `kitware Meta-configuration of C/C++ Projects with CMake by Sandy McKenzie`_
