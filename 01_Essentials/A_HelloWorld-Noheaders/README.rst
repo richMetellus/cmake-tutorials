@@ -1,3 +1,9 @@
+.. _CMakeLesson1:
+
+.. include:: /global.rst
+   :start-after: markupExtenstionStart
+   :end-before: markupExtenstionEnd
+   
 ####################################################################
 CMake Tutorials Basic Concepts - Hello World | No Header File
 ####################################################################
@@ -823,5 +829,6 @@ References/Inspirations
 .. 
    References
 
-.. [1] :ref:`chatGPT CMake Queries <chatGPTCMakeQueries>
+.. [1] :ref:`chatGPT CMake Queries <chatGPTCMakeQueries>`
+
 .. .. [2] `kitware Meta-configuration of C/C++ Projects with CMake by Sandy McKenzie`_
