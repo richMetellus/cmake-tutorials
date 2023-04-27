@@ -122,9 +122,11 @@ To start a basic cmake, you need:
             
             * This is useful to group related project-level variables such as 
               PROJECT_VERSION, PROJECT_NAME
-              and configurations together. this can help with the ouput name of the binary,
+              and configurations together. this can help with the output name of the binary,
               setting package name.
             
+            * make referencing certain variables easier when using multiple projects.
+
             .. seealso:: 
                
                * :ref:`ChatGPT response on the use of cmake project command <chatGPTCMakeQueries>`
@@ -151,7 +153,22 @@ To start a basic cmake, you need:
                           Use sub-projects if your codebase is very complex 
                           and you need users to be able to build certain 
                           components in isolation.
+        
+        .. note::
+           
+           There is a shorthand I see people use when using project and add_executable
+           when they want the executable to have the same name as the project.
 
+           .. code-block:: c
+
+              cmake_minimum_required(VERSION 3.13)
+              project(HelloWorld VERSION 1.0.0)
+              
+              add_executable(${PROJECT_NAME} main.cpp)
+           
+           * ``PROJECT_NAME`` variable was set by the ``project`` command with a Value HelloWorld
+           * The executable as a result will be named HelloWorld as well.
+              
 
         * Synopsis
             
