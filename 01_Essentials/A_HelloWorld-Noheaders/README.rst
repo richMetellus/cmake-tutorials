@@ -1,8 +1,6 @@
 .. _CMakeLesson1:
 
-.. include:: /global.rst
-   :start-after: markupExtenstionStart
-   :end-before: markupExtenstionEnd
+.. include:: /markupExtension.rst
    
 ####################################################################
 CMake Tutorials Basic Concepts - Hello World | No Header File
@@ -695,7 +693,8 @@ Out-of-Source Build Steps:
                
 #. Run the executable ``./HelloWorlExecutable``
    
-    .. code-block:: console
+    .. code-block:: Console
+
        rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$ ./HelloWorldExecutable 
        Hello World!rmetellus@UbuntuZephyrVM:~/Workspace/Repos/InternalRepos/cmake-tutorials/01_Essentials/A_HelloWorld-Noheaders/build(main)$
     
@@ -829,6 +828,6 @@ References/Inspirations
 .. 
    References
 
-.. [1] :ref:`chatGPT CMake Queries <chatGPTCMakeQueries>`
+.. [1] :doc:`../../../../CMK-JNL-0199_chatGPTCMakeQueries.md`
 
 .. .. [2] `kitware Meta-configuration of C/C++ Projects with CMake by Sandy McKenzie`_
