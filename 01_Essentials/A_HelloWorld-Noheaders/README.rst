@@ -133,7 +133,7 @@ To start a basic cmake, you need:
 
             .. seealso:: 
                
-               * :ref:`ChatGPT response on the use of cmake project command <chatGPTCMakeQueries>`
+               * ChatGPT response on the use of cmake project command/
                * `stackoverflow response <https://stackoverflow.com/questions/26878379/in-cmake-what-is-a-project>`_
                    
                    .. compound:: 
@@ -828,6 +828,6 @@ References/Inspirations
 .. 
    References
 
-.. [1] :doc:`../../../../CMK-JNL-0199_chatGPTCMakeQueries.md`
+.. [1] :doc:`/Wiki_CMake/CMK-JNL-0199_chatGPTCMakeQueries.md`
 
 .. .. [2] `kitware Meta-configuration of C/C++ Projects with CMake by Sandy McKenzie`_
